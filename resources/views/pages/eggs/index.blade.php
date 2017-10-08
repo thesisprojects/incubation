@@ -5,10 +5,11 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <h4 class="text-muted">List of eggs</h4>
+            <h4 class="text-muted">List of eggs under {{ Auth::user()->farm->name }}</h4>
             <table class="table table-responsive">
                 <thead>
                 <tr>
+                    <th>Farm</th>
                     <th>Name</th>
                     <th>Slug</th>
                     <th>Expiration date</th>
@@ -19,6 +20,7 @@
                 <tbody>
                 @foreach($eggs as $egg)
                     <tr>
+                        <td>{{ ucfirst($egg->farm->name) }}</td>
                         <td>{{ ucfirst($egg->name) }}</td>
                         <td>{{ strtolower($egg->slug) }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->toDateString() }}</td>

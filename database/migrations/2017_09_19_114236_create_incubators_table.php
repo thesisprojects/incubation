@@ -16,6 +16,7 @@ class CreateIncubatorsTable extends Migration
         Schema::create('incubators', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('urn');
+            $table->string('farm_id');
             $table->string('id')->unique();
             $table->string('name')->unique();
             $table->string('slug')->unique();

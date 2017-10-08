@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Farm;
 use App\Permission;
 use App\Role;
 use App\User;
@@ -13,7 +14,7 @@ class UserController extends Controller
 {
     public function getUsers()
     {
-        $users = User::with('roles')->paginate(10);
+        $users = User::with('roles', 'farm')->paginate(10);
         return view("pages.users.view")->with([
             'users' => $users
         ]);
@@ -22,14 +23,17 @@ class UserController extends Controller
     public function getCreate()
     {
         $roles = Role::all();
+        $farms = Farm::all();
         return view("pages.users.create")->with([
-            'roles' => $roles
+            'roles' => $roles,
+            'farms' => $farms
         ]);
     }
 
     public function getEdit($id)
     {
-        $user = User::find($id)->with('roles')->first();
+        $user = User::where('id', $id)->with('roles', 'farm')->first();
+        $farms = Farm::all();
         if ($user->roles->count()) {
             $roles = Role::where('id', '!=', $user->roles->first()->id)->get();
         } else {
@@ -37,7 +41,8 @@ class UserController extends Controller
         }
         return view("pages.users.edit")->with([
             'user' => $user,
-            'roles' => $roles
+            'roles' => $roles,
+            'farms' => $farms
         ]);
     }
 
@@ -49,14 +54,16 @@ class UserController extends Controller
                 'last_name' => 'required|min:2|max:40',
                 'username' => 'required|min:2|max:10',
                 'email' => 'required|min:2|max:40',
+                'farm_id' => 'required',
                 'role' => 'required',
             ]);
             $data = $request->all();
-            $user = User::find($data['id'])->with('roles')->first();
+            $user = User::where('id', $data['id'])->with('roles')->first();
             $oldRole = $user->roles->count() ? $user->roles->first()->id : null;
             $user->first_name = $data['first_name'];
             $user->last_name = $data['last_name'];
             $user->username = $data['username'];
+            $user->farm_id = $data['farm_id'];
             $user->email = $data['email'];
             if (!is_null($data['password'])) {
                 $user->password = Hash::make($data['password']);
@@ -82,6 +89,7 @@ class UserController extends Controller
             $this->validate($request, [
                 'first_name' => 'required|min:2|max:40',
                 'last_name' => 'required|min:2|max:40',
+                'farm_id' => 'required',
                 'username' => 'required|min:2|max:10',
                 'email' => 'required|min:2|max:40',
                 'password' => 'required',

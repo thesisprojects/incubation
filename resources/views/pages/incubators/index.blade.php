@@ -3,7 +3,7 @@
 @section('title', 'List of incubators')
 
 @section('content')
-    <h4 class="text-muted">List of incubators</h4>
+    <h4 class="text-muted">List of incubators under {{ Auth::user()->farm->first()->name }}</h4>
     <div class="row">
         @foreach($incubators as $incubator)
             <div class="col-sm-12 col-md-2 col-lg-2" style="margin: 4px;">
@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <span class="badge {{ $incubator->eggs->count() ? 'bg-danger' : 'bg-success' }} badge-default">&nbsp;&nbsp;&nbsp;</span>
+                                <span class="badge {{ $incubator->eggs->count() ? 'bg-danger' : 'bg-success' }} badge-default">{{ $incubator->farm->name }}</span>
                                 <h1 class="text-center"><i
                                             class="fa fa-inbox {{ $incubator->eggs->count() ? 'text-danger' : 'text-success' }}"
                                             aria-hidden="true"></i></h1>

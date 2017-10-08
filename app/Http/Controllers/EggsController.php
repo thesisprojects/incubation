@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Egg;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Auth;
 
 class EggsController extends Controller
 {
     public function getEggs()
     {
-    	$eggs = Egg::paginate(10);
+        $eggs = Auth::user()->farm()->first()->eggs()->with('farm')->paginate(10);
         return view("pages.eggs.index")->with([
             'eggs' => $eggs
         ]);
@@ -18,12 +19,12 @@ class EggsController extends Controller
 
     public function getCreate()
     {
-    	return view('pages.eggs.create');
+        return view('pages.eggs.create');
     }
 
     public function postCreate(Request $request)
     {
-    	try {
+        try {
             $this->validate($request, [
                 'name' => 'required|min:2|max:45',
                 'slug' => 'required|min:2|max:45',
@@ -31,8 +32,9 @@ class EggsController extends Controller
             ]);
             $data = $request->all();
             $egg = new Egg($data);
+            $egg->farm_id = Auth::user()->farm()->first()->id;
             $egg->id = Uuid::uuid1();
-			$egg->save();          
+            $egg->save();
             return back()->with('status', 'Egg created.');
         } catch (\Exception $exception) {
             return response()->json([
@@ -44,13 +46,13 @@ class EggsController extends Controller
 
     public function getEdit($id)
     {
-    	$egg = Egg::find($id);
-    	return view('pages.eggs.edit')->with('egg', $egg);
+        $egg = Egg::find($id);
+        return view('pages.eggs.edit')->with('egg', $egg);
     }
 
     public function postUpdate(Request $request)
     {
-    	try {
+        try {
             $this->validate($request, [
                 'name' => 'required|min:2|max:45',
                 'slug' => 'required|min:2|max:45',
@@ -62,7 +64,7 @@ class EggsController extends Controller
             $egg->name = $data['name'];
             $egg->slug = $data['slug'];
             $egg->expire_at = $data['expire_at'];
-			$egg->save();          
+            $egg->save();
             return back()->with('status', 'Egg updated.');
         } catch (\Exception $exception) {
             return response()->json([

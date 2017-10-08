@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'dialler_id', 'first_name', 'last_name','username', 'email', 'password',
+        'dialler_id', 'first_name', 'last_name','username', 'email', 'password','farm_id'
     ];
 
     /**
@@ -33,6 +33,11 @@ class User extends Authenticatable
     public function newConnection($connection)
     {
         $this->connection = $connection;
+    }
+
+    public function farm()
+    {
+        return $this->belongsTo('App\Farm');
     }
 
     public function roles()

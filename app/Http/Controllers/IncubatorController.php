@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Incubator;
 use Ramsey\Uuid\Uuid;
 use App\Egg;
+use Illuminate\Support\Facades\Auth;
 
 class IncubatorController extends Controller
 {
     public function getIncubators()
     {
-        $incubators = Incubator::with('eggs')->paginate(10);
+        $incubators = Incubator::with('eggs', 'farm')->paginate(10);
         return view("pages.incubators.index")->with([
             'incubators' => $incubators
         ]);
@@ -31,6 +32,7 @@ class IncubatorController extends Controller
             ]);
             $data = $request->all();
             $egg = new Incubator($data);
+            $egg->farm_id = Auth::user()->farm()->first()->id;
             $egg->id = Uuid::uuid1();
             $egg->save();
             return back()->with('status', 'Incubator created.');
@@ -73,7 +75,7 @@ class IncubatorController extends Controller
     public function getEggAssigningPage($id)
     {
         $incubator = Incubator::with('eggs')->where('id', $id)->first();
-        $eggs = Egg::whereNull('incubator_id')->get();
+        $eggs = Auth::user()->farm()->first()->eggs()->whereNull('incubator_id')->get();
         return view('pages.incubators.eggs')->with(['incubator' => $incubator, 'eggs' => $eggs]);
     }
 
