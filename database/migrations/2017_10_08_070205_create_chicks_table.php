@@ -14,7 +14,12 @@ class CreateChicksTable extends Migration
     public function up()
     {
         Schema::create('chicks', function (Blueprint $table) {
-            $table->increments('id');
+            $table->engine = 'InnoDB';
+            $table->increments('urn');
+            $table->string('egg_id')->unique();
+            $table->string('id')->unique();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

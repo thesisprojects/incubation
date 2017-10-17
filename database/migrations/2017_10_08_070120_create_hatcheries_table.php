@@ -14,7 +14,12 @@ class CreateHatcheriesTable extends Migration
     public function up()
     {
         Schema::create('hatcheries', function (Blueprint $table) {
-            $table->increments('id');
+            $table->engine = 'InnoDB';
+            $table->increments('urn');
+            $table->string('farm_id');
+            $table->string('id')->unique();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

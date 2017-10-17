@@ -57,6 +57,24 @@
             </div>
         @endif
 
+        @if(Auth::user()->hasPermission('view incubators'))
+            <a href="#clients" class="list-group-item d-inline-block collapsed" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"><i class="fa fa-users" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">Clients</span> </a>
+            <div class="collapse" id="clients">
+                <a href="{{ route('getCreateClient') }}" class="list-group-item" data-parent="#clients">Create </a>
+                <a href="{{ route('getClients') }}" class="list-group-item" data-parent="#clients">View </a>
+            </div>
+        @endif
+
+        @if(Auth::user()->hasPermission('view hatchery'))
+            <a href="#hatcheries" class="list-group-item d-inline-block collapsed" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"><i class="fa fa-thermometer" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">Hatcheries</span> </a>
+            <div class="collapse" id="hatcheries">
+                <a href="{{ route('getCreateHatchery') }}" class="list-group-item" data-parent="#hatcheries">Create </a>
+                <a href="{{ route('getHatcheries') }}" class="list-group-item" data-parent="#hatcheries">View </a>
+            </div>
+        @endif
+
         <a href="{{ Route('getLogout') }}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-sign-out" aria-hidden="true"></i> <span class="d-none d-md-inline">Logout</span></a>
     </div>
 </div>

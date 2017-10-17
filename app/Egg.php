@@ -14,6 +14,11 @@ class Egg extends Model
     	return $this->belongsTo("App\Incubator");
     }
 
+    public function hatchery()
+    {
+        return $this->belongsTo("App\Hatchery");
+    }
+
     public function farm()
     {
         return $this->belongsTo("App\Farm");

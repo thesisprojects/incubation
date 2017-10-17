@@ -19,5 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call(EggPermissionSeeder::class);
         $this->call(FarmPermissionSeeder::class);
         $this->call(IncubatorPermissionSeeder::class);
+        $this->call(ClientPermissionSeeder::class);
+        $this->call(ChickPermissionSeeder::class);
+        $this->call(HatcheryPermissionSeeder::class);
     }
 }

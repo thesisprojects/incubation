@@ -66,6 +66,23 @@ Route::group(['prefix' => '/'], function () {
             Route::name('postRemoveEgg')->post('removeegg', 'IncubatorController@postRemoveEgg')->middleware('permissions:edit incubators');
         });
 
+        Route::group(['prefix' => 'clients/'], function () {
+            Route::name('getClients')->get('', 'ClientController@getClients')->middleware('permissions:view client');
+            Route::name('getCreateClient')->get('create', 'ClientController@getCreate')->middleware('permissions:create client');
+            Route::name('getEditClient')->get('edit/{id}', 'ClientController@getEdit')->middleware('permissions:edit client');
+            Route::name('postCreateClient')->post('create', 'ClientController@postCreate')->middleware('permissions:create client');
+            Route::name('postEditClient')->post('update', 'ClientController@postUpdate')->middleware('permissions:edit client');
+        });
+
+        Route::group(['prefix' => 'hatchery/'], function () {
+            Route::name('getHatcheries')->get('', 'HatcheryController@getHatcheries')->middleware('permissions:view hatchery');
+            Route::name('getCreateHatchery')->get('create', 'HatcheryController@getCreate')->middleware('permissions:create hatchery');
+            Route::name('getEditHatchery')->get('edit/{id}', 'HatcheryController@getEdit')->middleware('permissions:edit hatchery');
+            Route::name('getHatcheryEggs')->get('{id}/eggs', 'HatcheryController@getHatcheryEggs')->middleware('permissions:view hatchery');
+            Route::name('postCreateHatchery')->post('create', 'HatcheryController@postCreate')->middleware('permissions:create hatchery');
+            Route::name('postEditHatchery')->post('update', 'HatcheryController@postUpdate')->middleware('permissions:edit hatchery');
+        });
+
     });
 
 });

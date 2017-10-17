@@ -23,4 +23,9 @@ class Farm extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    public function hatcheries()
+    {
+        return $this->hasMany('App\Hatchery');
+    }
 }
