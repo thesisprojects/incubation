@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Farm;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Hatchery;
+use App\Delivery;
 use Illuminate\Support\Facades\Auth;
 
 class HatcheryController extends Controller
 {
     public function getHatcheries()
     {
-        $hatcheries = Auth::user()->farm()->first()->hatcheries()->with('farm')->paginate(10);
+        $hatcheries = Hatchery::with('farm')->paginate(10);
+        $farms = Farm::all();
         return view("pages.hatchery.index")->with([
-            'hatcheries' => $hatcheries
+            'hatcheries' => $hatcheries,
         ]);
     }
 
     public function getHatcheryEggs($id)
     {
-        $hatchery = Hatchery::where('id', $id)->with('eggs')->first();
+        $deliveredEggs = Delivery::all()->pluck('egg_id');
+        $hatchery = Hatchery::where('id', $id)->with(['eggs' => function ($query) use ($deliveredEggs) {
+            $query->whereNotIn('id', $deliveredEggs);
+        }])->first();
         return view("pages.hatchery.eggs")->with([
             'hatchery' => $hatchery
         ]);
@@ -27,7 +33,8 @@ class HatcheryController extends Controller
 
     public function getCreate()
     {
-        return view('pages.hatchery.create');
+        $farms = Farm::all();
+        return view('pages.hatchery.create')->with('farms', $farms);
     }
 
     public function postCreate(Request $request)
@@ -40,7 +47,6 @@ class HatcheryController extends Controller
             $data = $request->all();
             $data['id'] = Uuid::uuid1();
             $hatchery = new Hatchery($data);
-            $hatchery->farm_id = Auth::user()->farm()->first()->id;
             $hatchery->save();
             return back()->with('status', 'Hatchery created.');
         } catch (\Exception $exception) {
@@ -53,8 +59,9 @@ class HatcheryController extends Controller
 
     public function getEdit($id)
     {
-        $hatchery = Hatchery::find($id);
-        return view('pages.hatchery.edit')->with('hatchery', $hatchery);
+        $hatchery = Hatchery::with('farm')->find($id);
+        $farms = Farm::all();
+        return view('pages.hatchery.edit')->with(['hatchery' => $hatchery, 'farms' => $farms]);
     }
 
     public function postUpdate(Request $request)
@@ -69,6 +76,7 @@ class HatcheryController extends Controller
             $hatchery = Hatchery::find($id);
             $hatchery->name = $data['name'];
             $hatchery->slug = $data['slug'];
+            $hatchery->farm_id = $data['farm_id'];
             $hatchery->save();
             return back()->with('status', 'Hatchery updated.');
         } catch (Exception $exception) {

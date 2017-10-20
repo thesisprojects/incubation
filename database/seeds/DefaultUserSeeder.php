@@ -17,11 +17,9 @@ class DefaultUserSeeder extends Seeder
      */
     public function run()
     {
-        $farm = \App\Farm::where('name', 'ABC Farm')->firstOrFail();
         $this->createSuperUserWithPermissions([
             'id' => Uuid::uuid1(),
             'first_name' => 'Jessa',
-            'farm_id' => $farm->id,
             'last_name' => 'Cervantes',
             'username' => 'c_cervantes',
             'email' => 'jessacervantes@gmail.com',
@@ -38,7 +36,6 @@ class DefaultUserSeeder extends Seeder
         $user->id = $user_id;
         $user->username = $data['username'];
         $user->email = $data['email'];
-        $user->farm_id = $data['farm_id'];
         $user->first_name = $data['first_name'];
         $user->last_name = $data['last_name'];
         $user->password = bcrypt('secret');

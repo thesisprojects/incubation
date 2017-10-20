@@ -16,22 +16,6 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group">
-                                <select name = "farm_id" class="custom-select form-control" required>
-                                    @if(!is_null($user->farm))
-                                        <option value="{{ $user->farm->id }}">
-                                            {{ ucwords($user->farm->name) }}
-                                        </option>
-                                    @endif
-                                    @foreach($farms as $farm)
-                                        <option value="{{ $farm->id }}">
-                                            {{ ucwords($farm->name) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
                                 <label for="name-input">First name</label>

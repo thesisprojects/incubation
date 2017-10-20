@@ -16,6 +16,21 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="id" value="{{ $incubator->id }}">
                     <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label for="name-input">Farm</label>
+                                <select name = "farm_id" class="custom-select form-control" required>
+                                    <option value="{{ $incubator->farm->id }}">
+                                        {{ ucwords($incubator->farm->name) }}
+                                    </option>
+                                    @foreach($farms as $farm)
+                                        <option value="{{ $farm->id }}">
+                                            {{ ucwords($farm->name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
                                 <label for="name-input">Name</label>

@@ -15,16 +15,32 @@
                     {{ Form::open(['route'=>'postCreateIncubator']) }}
                     {{ csrf_field() }}
                     <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label for="name-input">Farm</label>
+                                <select name = "farm_id" class="custom-select form-control" required>
+                                    @foreach($farms as $farm)
+                                        <option value="{{ $farm->id }}">
+                                            {{ ucwords($farm->name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
                                 <label for="name-input">Name</label>
-                                <input type="text" class="form-control" id="name-input" name="name" minlength="2" maxlength="45" required>
+                                <input type="text" class="form-control" id="name-input" name="name" minlength="2"
+                                       maxlength="45" required>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
                                 <label for="description-input">Slug</label>
-                                <input type="text" class="form-control" id="slug-input" name="slug" minlength="2" maxlength="45" required>
+                                <input type="text" class="form-control" id="slug-input"
+                                       value="incubator-{{ \Carbon\Carbon::now()->timestamp }}"
+                                       name="slug" minlength="2" maxlength="45" required>
                             </div>
                         </div>
                     </div>

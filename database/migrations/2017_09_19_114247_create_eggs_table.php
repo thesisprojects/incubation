@@ -20,6 +20,7 @@ class CreateEggsTable extends Migration
             $table->string('id')->unique();
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->boolean('is_expired')->default(0);
             $table->string('incubator_id')->nullable();
             $table->string('hatchery_id')->nullable();
             $table->datetime('hatchery_date')->nullable();

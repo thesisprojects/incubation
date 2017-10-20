@@ -3,7 +3,6 @@
 @section('title', 'List of hatcheries')
 
 @section('content')
-    <h4 class="text-muted">List of hatcheries under {{ Auth::user()->farm->first()->name }}</h4>
     <div class="row">
         @foreach($hatcheries as $hatchery)
             <div class="col-sm-12 col-md-2 col-lg-2" style="margin: 4px;">

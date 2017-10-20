@@ -13,6 +13,7 @@
                     <th>Slug</th>
                     <th>Expiration date</th>
                     <th>Days till expiration</th>
+                    <th>Client</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -24,9 +25,23 @@
                         <td>{{ strtolower($egg->slug) }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->toDateString() }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->diffForHumans() }}</td>
-                        
                         <td>
-                            <button onclick="window.location.assign('{{ route('getEditEgg', ['id' => $egg->id]) }}')" class="btn btn-success text-white">Edit</button>
+                            {{ Form::open(['route'=>'postDeliver']) }}
+                            {{ csrf_field() }}
+                            <input type="text" value="{{ $egg->id }}" name="egg_id" hidden required>
+                            <select name="client_id" class="form-control col col-sm-12 col-md-6 col-lg-6" required>
+                                <option value="" selected disabled="">Select client</option>
+                                @foreach($clients as $client)
+                                    <option value="{{ $client->id }}">{{ $client->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <button type="submit"
+                                    class="btn btn-success text-white">Deliver
+                            </button>
+                            {{ Form::close() }}
                         </td>
                     </tr>
                 @endforeach

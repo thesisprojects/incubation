@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
         Schema::connection($connection)->create('users', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('id')->unique();
-            $table->string('farm_id');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('username')->unique();

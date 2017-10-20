@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Egg;
 use Ramsey\Uuid\Uuid;
+use App\Farm;
 use Illuminate\Support\Facades\Auth;
 
 class EggsController extends Controller
 {
     public function getEggs()
     {
-        $eggs = Auth::user()->farm()->first()->eggs()->with('farm')->paginate(10);
+        $eggs = Egg::with('farm')->paginate(10);
         return view("pages.eggs.index")->with([
             'eggs' => $eggs
         ]);
@@ -19,7 +20,8 @@ class EggsController extends Controller
 
     public function getCreate()
     {
-        return view('pages.eggs.create');
+        $farms = Farm::all();
+        return view('pages.eggs.create')->with('farms', $farms);
     }
 
     public function postCreate(Request $request)
@@ -32,11 +34,10 @@ class EggsController extends Controller
             ]);
             $data = $request->all();
             $egg = new Egg($data);
-            $egg->farm_id = Auth::user()->farm()->first()->id;
             $egg->id = Uuid::uuid1();
             $egg->save();
             return back()->with('status', 'Egg created.');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return response()->json([
                 'message' => 'Something fatal went up',
                 'error' => $exception->getMessage()
@@ -46,8 +47,9 @@ class EggsController extends Controller
 
     public function getEdit($id)
     {
-        $egg = Egg::find($id);
-        return view('pages.eggs.edit')->with('egg', $egg);
+        $egg = Egg::with('farm')->find($id);
+        $farms = Farm::all();
+        return view('pages.eggs.edit')->with(['egg' => $egg, 'farms' => $farms]);
     }
 
     public function postUpdate(Request $request)
@@ -63,10 +65,11 @@ class EggsController extends Controller
             $egg = Egg::find($id);
             $egg->name = $data['name'];
             $egg->slug = $data['slug'];
+            $egg->farm_id = $data['farm_id'];
             $egg->expire_at = $data['expire_at'];
             $egg->save();
             return back()->with('status', 'Egg updated.');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return response()->json([
                 'message' => 'Something fatal went up',
                 'error' => $exception->getMessage()

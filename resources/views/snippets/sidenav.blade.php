@@ -75,6 +75,16 @@
             </div>
         @endif
 
+        @if(Auth::user()->hasPermission('deliver'))
+            <a href="#delivery" class="list-group-item d-inline-block collapsed" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"><i class="fa fa-truck" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">Delivery</span> </a>
+            <div class="collapse" id="delivery">
+                <a href="{{ route('getDelivery') }}" class="list-group-item" data-parent="#delivery">Deliver eggs</a>
+                <a href="{{ route('getDeliveries') }}" class="list-group-item" data-parent="#delivery">Deliveries</a>
+            </div>
+        @endif
+
+
         <a href="{{ Route('getLogout') }}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-sign-out" aria-hidden="true"></i> <span class="d-none d-md-inline">Logout</span></a>
     </div>
 </div>

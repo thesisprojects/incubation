@@ -9,7 +9,6 @@
             <table class="table table-responsive">
                 <thead>
                 <tr>
-                    <th>Farm</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Username</th>
@@ -21,7 +20,6 @@
                 <tbody>
                 @foreach($users as $user)
                     <tr>
-                        <td>{{ ucwords(!is_null($user->farm) ? $user->farm->name : 'NO FARM') }}</td>
                         <td>{{ ucwords($user->first_name) }}</td>
                         <td>{{ ucwords($user->last_name) }}</td>
                         <td>{{ $user->username }}</td>

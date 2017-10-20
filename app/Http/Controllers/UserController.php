@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function getUsers()
     {
-        $users = User::with('roles', 'farm')->paginate(10);
+        $users = User::with('roles')->paginate(10);
         return view("pages.users.view")->with([
             'users' => $users
         ]);
@@ -32,8 +32,7 @@ class UserController extends Controller
 
     public function getEdit($id)
     {
-        $user = User::where('id', $id)->with('roles', 'farm')->first();
-        $farms = Farm::all();
+        $user = User::where('id', $id)->with('roles')->first();
         if ($user->roles->count()) {
             $roles = Role::where('id', '!=', $user->roles->first()->id)->get();
         } else {
@@ -41,8 +40,7 @@ class UserController extends Controller
         }
         return view("pages.users.edit")->with([
             'user' => $user,
-            'roles' => $roles,
-            'farms' => $farms
+            'roles' => $roles
         ]);
     }
 
@@ -54,7 +52,6 @@ class UserController extends Controller
                 'last_name' => 'required|min:2|max:40',
                 'username' => 'required|min:2|max:10',
                 'email' => 'required|min:2|max:40',
-                'farm_id' => 'required',
                 'role' => 'required',
             ]);
             $data = $request->all();
@@ -63,7 +60,6 @@ class UserController extends Controller
             $user->first_name = $data['first_name'];
             $user->last_name = $data['last_name'];
             $user->username = $data['username'];
-            $user->farm_id = $data['farm_id'];
             $user->email = $data['email'];
             if (!is_null($data['password'])) {
                 $user->password = Hash::make($data['password']);
@@ -89,7 +85,6 @@ class UserController extends Controller
             $this->validate($request, [
                 'first_name' => 'required|min:2|max:40',
                 'last_name' => 'required|min:2|max:40',
-                'farm_id' => 'required',
                 'username' => 'required|min:2|max:10',
                 'email' => 'required|min:2|max:40',
                 'password' => 'required',

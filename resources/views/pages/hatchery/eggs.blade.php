@@ -13,6 +13,7 @@
                     <th>Slug</th>
                     <th>Expiration date</th>
                     <th>Days till expiration</th>
+                    <th>Date transfered to hatchery</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -22,6 +23,7 @@
                         <td>{{ strtolower($egg->slug) }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->toDateString() }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->diffForHumans() }}</td>
+                        <td>{{ Carbon\Carbon::parse($egg->hatchery_date)->toDateString() }}</td>
                     </tr>
                 @endforeach
                 </tbody>

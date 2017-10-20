@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Hatchery;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Incubator;
 use Ramsey\Uuid\Uuid;
 use App\Egg;
 use Illuminate\Support\Facades\Auth;
+use App\Farm;
+use App\Delivery;
 
 class IncubatorController extends Controller
 {
@@ -14,13 +18,15 @@ class IncubatorController extends Controller
     {
         $incubators = Incubator::with('eggs', 'farm')->paginate(10);
         return view("pages.incubators.index")->with([
-            'incubators' => $incubators
+            'incubators' => $incubators,
+
         ]);
     }
 
     public function getCreate()
     {
-        return view('pages.incubators.create');
+        $farms = Farm::all();
+        return view('pages.incubators.create')->with('farms', $farms);
     }
 
     public function postCreate(Request $request)
@@ -32,7 +38,6 @@ class IncubatorController extends Controller
             ]);
             $data = $request->all();
             $egg = new Incubator($data);
-            $egg->farm_id = Auth::user()->farm()->first()->id;
             $egg->id = Uuid::uuid1();
             $egg->save();
             return back()->with('status', 'Incubator created.');
@@ -46,8 +51,9 @@ class IncubatorController extends Controller
 
     public function getEdit($id)
     {
-        $incubator = Incubator::find($id);
-        return view('pages.incubators.edit')->with('incubator', $incubator);
+        $incubator = Incubator::with('farm')->find($id);
+        $farms = Farm::all();
+        return view('pages.incubators.edit')->with(['incubator' => $incubator, 'farms' => $farms]);
     }
 
     public function postUpdate(Request $request)
@@ -62,6 +68,7 @@ class IncubatorController extends Controller
             $incubator = Incubator::find($id);
             $incubator->name = $data['name'];
             $incubator->slug = $data['slug'];
+            $incubator->farm_id = $data['farm_id'];
             $incubator->save();
             return back()->with('status', 'Incubator updated.');
         } catch (Exception $exception) {
@@ -74,9 +81,59 @@ class IncubatorController extends Controller
 
     public function getEggAssigningPage($id)
     {
-        $incubator = Incubator::with('eggs')->where('id', $id)->first();
-        $eggs = Auth::user()->farm()->first()->eggs()->whereNull('incubator_id')->get();
-        return view('pages.incubators.eggs')->with(['incubator' => $incubator, 'eggs' => $eggs]);
+        $deliveredEggs = Delivery::all()->pluck('egg_id');
+        $incubator = Incubator::with(['eggs' => function ($query) use ($deliveredEggs) {
+            $query->whereNotIn('id', $deliveredEggs);
+        }, 'farm', 'farm.hatcheries'])->where('id', $id)->first();
+        $eggs = $incubator->farm->eggs()->whereNull('incubator_id')->whereNull('hatchery_id')->get();
+        $hatcheries = $incubator->farm->hatcheries;
+        return view('pages.incubators.eggs')->with(['incubator' => $incubator, 'eggs' => $eggs, 'hatcheries' => $hatcheries]);
+    }
+
+    public function postTransferEgg(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $egg = Egg::find($data['egg']);
+            $egg->incubator_id = null;
+            $egg->hatchery_id = $data['hatchery_id'];
+            $egg->hatchery_date = Carbon::now();
+            $egg->save();
+            return back()->with('status', 'Egg transfered to hatchery.');
+        } catch (Exception $exception) {
+            return response()->json([
+                'message' => 'Something fatal went up',
+                'error' => $exception->getMessage()
+            ], 500);
+        }
+    }
+
+    public function postBulkHatceryTransfer(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $incubator = Incubator::find($data['incubator']);
+            $eggs = $incubator->eggs()->get();
+            $invalidEgg = 0;
+            foreach ($eggs as $egg) {
+                $availableForTransfer = Carbon::now()->diffInDays(Carbon::parse($egg->created_at)) > 17;
+                if ($availableForTransfer) {
+                    $egg->incubator_id = null;
+                    $egg->hatchery_id = $data['hatchery_id'];
+                    $egg->hatchery_date = Carbon::now();
+                    $egg->save();
+                } else {
+                    $invalidEgg++;
+                }
+            }
+
+            return back()->with('status', ($eggs->count() - $invalidEgg) . ' eggs transfered to hatchery.');
+        } catch (Exception $exception) {
+            return response()->json([
+                'message' => 'Something fatal went up',
+                'error' => $exception->getMessage()
+            ], 500);
+        }
     }
 
     public function postEggAssigningPage(Request $request)
