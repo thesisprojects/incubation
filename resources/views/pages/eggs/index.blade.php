@@ -11,6 +11,7 @@
                     <th>Farm</th>
                     <th>Name</th>
                     <th>Slug</th>
+                    <th>Expired</th>
                     <th>Expiration date</th>
                     <th>Days till expiration</th>
                     <th></th>
@@ -22,11 +23,20 @@
                         <td>{{ ucfirst($egg->farm->name) }}</td>
                         <td>{{ ucfirst($egg->name) }}</td>
                         <td>{{ strtolower($egg->slug) }}</td>
+                        <td>
+                            @if($egg->is_expired)
+                                <b class = "red-text">YES</b>
+                            @else
+                                <b class = "green-text">NO</b>
+                            @endif
+                        </td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->toDateString() }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->diffForHumans() }}</td>
-                        
+
                         <td>
-                            <button onclick="window.location.assign('{{ route('getEditEgg', ['id' => $egg->id]) }}')" class="btn btn-success text-white">Edit</button>
+                            <button onclick="window.location.assign('{{ route('getEditEgg', ['id' => $egg->id]) }}')"
+                                    class="btn btn-success text-white">Edit
+                            </button>
                         </td>
                     </tr>
                 @endforeach

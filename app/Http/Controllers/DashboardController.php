@@ -23,7 +23,6 @@ class DashboardController extends Controller
         $todaysExpiree = Egg::whereBetween('expire_at', [$today->copy()->startOfDay(), $today->copy()->endOfDay()])->count();
         $thisMonthsExpiree = Egg::whereBetween('expire_at', $dateRange)->count();
 
-
         foreach ($thisWeeksExpire as $egg)
         {
             if(Carbon::parse($egg->expire_at)->isPast())

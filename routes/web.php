@@ -52,6 +52,8 @@ Route::group(['prefix' => '/'], function () {
             Route::name('getEditEgg')->get('edit/{id}', 'EggsController@getEdit')->middleware('permissions:edit eggs');
             Route::name('postEditEgg')->post('update', 'EggsController@postUpdate')->middleware('permissions:edit eggs');
             Route::name('getCreateEgg')->get('create', 'EggsController@getCreate')->middleware('permissions:view eggs');
+            Route::name('downloadExpiredEggsReport')->get('expired/download', 'ReportsController@downloadExpiredEggs')->middleware('permissions:view eggs');
+            Route::name('downloadAlmostExpired')->get('almose/download', 'ReportsController@downloadAlmostExpired')->middleware('permissions:view eggs');
             Route::name('postCreateEgg')->post('create', 'EggsController@postCreate')->middleware('permissions:create eggs');
         });
 
@@ -89,6 +91,12 @@ Route::group(['prefix' => '/'], function () {
             Route::name('getDelivery')->get('', 'DeliveryController@index')->middleware('permissions:deliver');
             Route::name('postDeliver')->post('deliver', 'DeliveryController@deliver')->middleware('permissions:deliver');
             Route::name('getDeliveries')->get('deliveries', 'DeliveryController@getDeliveries')->middleware('permissions:deliver');
+            Route::name('downloadDeliveryReport')->get('report/{from}/{to}', 'ReportsController@downloadDeilveryReports')->middleware('permissions:deliver');
+        });
+
+        Route::group(['prefix' => 'notifications/'], function () {
+            Route::name('getNotifications')->get('', 'NotificationController@index')->middleware('permissions:deliver');
+            Route::name('postMarkAsSeen')->post('seen', 'NotificationController@postMarkAsSeen')->middleware('permissions:deliver');
         });
 
     });
