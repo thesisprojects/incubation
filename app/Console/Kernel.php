@@ -2,7 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\RemoveFromHatchery;
 use App\Console\Commands\SetEggToExpired;
+use App\Hatchery;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

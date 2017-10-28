@@ -22,6 +22,8 @@
                                 <p class="text-muted">Name: {{ ucwords($incubator->name) }}</p>
                                 <p class="text-muted">Slug: {{ strtolower($incubator->slug) }}</p>
                                 <p class="text-muted">Number of eggs: {{ strtolower($incubator->eggs->count()) }}</p>
+                                <p class="text-muted">Number of eggs: {{ strtolower($incubator->eggs->count()) }}</p>
+                                <p class="text-muted">{{ $incubator->eggs->where('is_expired', 1)->count() }} / {{ $incubator->eggs->count() }}</p>
                             </div>
                         </div>
                         <div class="row">

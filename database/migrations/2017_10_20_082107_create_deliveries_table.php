@@ -18,7 +18,9 @@ class CreateDeliveriesTable extends Migration
             $table->increments('urn');
             $table->string('id')->unique();
             $table->string('client_id');
-            $table->string('egg_id')->unique();
+            $table->string('egg_id')->unique()->nullable();
+            $table->string('chick_id')->unique()->nullable();
+            $table->string('type');
             $table->timestamps();
         });
     }

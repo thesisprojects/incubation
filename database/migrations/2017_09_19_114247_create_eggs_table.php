@@ -23,8 +23,9 @@ class CreateEggsTable extends Migration
             $table->boolean('is_expired')->default(0);
             $table->string('incubator_id')->nullable();
             $table->string('hatchery_id')->nullable();
+            $table->datetime('hatch_date')->nullable();
             $table->datetime('hatchery_date')->nullable();
-            $table->datetime('expire_at');
+            $table->datetime('expire_at')->nullable();
             $table->timestamps();
         });
     }

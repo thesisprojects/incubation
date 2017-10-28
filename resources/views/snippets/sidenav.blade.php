@@ -13,7 +13,6 @@
         <a href="{{ Route('getNotifications') }}" class="list-group-item d-inline-block collapsed"
            data-parent="#sidebar"><i class="fa fa-bell" aria-hidden="true"></i> <span
                     class="d-none d-md-inline">Notifications ({{ \App\Notification::where('seen', 0)->count() }})</span></a>
-
         @if(Auth::user()->hasPermission('view dashboard'))
             <a href="{{ Route('getDashboard') }}" class="list-group-item d-inline-block collapsed"
                data-parent="#sidebar"><i class="fa fa-tachometer" aria-hidden="true"></i> <span
@@ -60,6 +59,14 @@
                     eggs </a>
             </div>
         @endif
+        @if(Auth::user()->hasPermission('view chicks'))
+            <a href="#chicks" class="list-group-item d-inline-block collapsed" data-toggle="collapse"
+               data-parent="#chicks" aria-expanded="false"><i class="fa fa-heartbeat" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">Chicks</span> </a>
+            <div class="collapse" id="chicks">
+                <a href="{{ route('getChicks') }}" class="list-group-item" data-parent="#eggs">View</a>
+            </div>
+        @endif
         @if(Auth::user()->hasPermission('view incubators'))
             <a href="#incubators" class="list-group-item d-inline-block collapsed" data-toggle="collapse"
                data-parent="#sidebar" aria-expanded="false"><i class="fa fa-thermometer-full" aria-hidden="true"></i>
@@ -71,7 +78,7 @@
             </div>
         @endif
 
-        @if(Auth::user()->hasPermission('view incubators'))
+        @if(Auth::user()->hasPermission('view client'))
             <a href="#clients" class="list-group-item d-inline-block collapsed" data-toggle="collapse"
                data-parent="#sidebar" aria-expanded="false"><i class="fa fa-users" aria-hidden="true"></i>
                 <span class="d-none d-md-inline">Clients</span> </a>
@@ -97,6 +104,7 @@
                 <span class="d-none d-md-inline">Delivery</span> </a>
             <div class="collapse" id="delivery">
                 <a href="{{ route('getDelivery') }}" class="list-group-item" data-parent="#delivery">Deliver eggs</a>
+                <a href="{{ route('getDeliveryChicks') }}" class="list-group-item" data-parent="#delivery">Deliver chicks</a>
                 <a href="{{ route('getDeliveries') }}" class="list-group-item" data-parent="#delivery">Deliveries</a>
                 <a href="{{ route('downloadDeliveryReport', ['from' => \Carbon\Carbon::now()->startOfDay(), 'to' =>\Carbon\Carbon::now()->endOfDay()]) }}"
                    class="list-group-item" data-parent="#delivery">Report Today</a>

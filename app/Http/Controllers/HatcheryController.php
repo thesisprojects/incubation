@@ -22,9 +22,7 @@ class HatcheryController extends Controller
 
     public function getHatcheryEggs($id)
     {
-        $deliveredEggs = Delivery::all()->pluck('egg_id');
-        $hatchery = Hatchery::where('id', $id)->with(['eggs' => function ($query) use ($deliveredEggs) {
-            $query->whereNotIn('id', $deliveredEggs);
+        $hatchery = Hatchery::where('id', $id)->with(['eggs' => function ($query) {
         }])->first();
         return view("pages.hatchery.eggs")->with([
             'hatchery' => $hatchery

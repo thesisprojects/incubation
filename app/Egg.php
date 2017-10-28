@@ -23,4 +23,9 @@ class Egg extends Model
     {
         return $this->belongsTo("App\Farm");
     }
+
+    public function chick()
+    {
+        return $this->hasOne("App\Chick");
+    }
 }

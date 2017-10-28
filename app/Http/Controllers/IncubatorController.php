@@ -16,10 +16,11 @@ class IncubatorController extends Controller
 {
     public function getIncubators()
     {
-        $incubators = Incubator::with('eggs', 'farm')->paginate(10);
+        $deliveredEggs = Delivery::all()->pluck('egg_id');
+        $incubators = Incubator::with(['eggs' => function ($query) use ($deliveredEggs) {
+        }, 'farm', 'farm.hatcheries'])->paginate(10);
         return view("pages.incubators.index")->with([
             'incubators' => $incubators,
-
         ]);
     }
 
@@ -81,11 +82,11 @@ class IncubatorController extends Controller
 
     public function getEggAssigningPage($id)
     {
-        $deliveredEggs = Delivery::all()->pluck('egg_id');
+        $deliveredEggs = Delivery::whereNotNull('egg_id')->pluck('egg_id');
         $incubator = Incubator::with(['eggs' => function ($query) use ($deliveredEggs) {
-            $query->whereNotIn('id', $deliveredEggs);
+            $query->whereNotIn('id', $deliveredEggs)->whereNull('hatch_date');
         }, 'farm', 'farm.hatcheries'])->where('id', $id)->first();
-        $eggs = $incubator->farm->eggs()->whereNull('incubator_id')->whereNull('hatchery_id')->get();
+        $eggs = $incubator->farm->eggs()->whereNull('incubator_id')->whereNull('hatchery_id')->whereNull('hatch_date')->whereNotIn('id', $deliveredEggs)->where('is_expired', 0)->get();
         $hatcheries = $incubator->farm->hatcheries;
         return view('pages.incubators.eggs')->with(['incubator' => $incubator, 'eggs' => $eggs, 'hatcheries' => $hatcheries]);
     }
@@ -98,6 +99,7 @@ class IncubatorController extends Controller
             $egg->incubator_id = null;
             $egg->hatchery_id = $data['hatchery_id'];
             $egg->hatchery_date = Carbon::now();
+            $egg->expire_at = Carbon::parse(Carbon::now()->addDays(6))->toDateString();
             $egg->save();
             return back()->with('status', 'Egg transfered to hatchery.');
         } catch (Exception $exception) {

@@ -14,6 +14,7 @@
                     <th>Expiration date</th>
                     <th>Days till expiration</th>
                     <th>Date transfered to hatchery</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -24,6 +25,9 @@
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->toDateString() }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->diffForHumans() }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->hatchery_date)->toDateString() }}</td>
+                        <td><a href="{{ route('getHatcheryEggs', ['id' => $hatchery->id]) }}"
+                               class="btn btn-success text-white">Hatch
+                            </a></td>
                     </tr>
                 @endforeach
                 </tbody>

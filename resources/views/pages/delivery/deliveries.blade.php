@@ -9,8 +9,9 @@
                 <thead>
                 <tr>
                     <th>Client</th>
-                    <th>Egg</th>
-                    <th>Egg slug</th>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Slug</th>
                     <th>Delivered at</th>
                     <th>Delivery date</th>
                 </tr>
@@ -19,8 +20,9 @@
                 @foreach($deliveries as $delivery)
                     <tr>
                         <td>{{ ucfirst($delivery->client->name) }}</td>
-                        <td>{{ ucfirst($delivery->egg->name) }}</td>
-                        <td>{{ $delivery->egg->slug }}</td>
+                        <td>{{ ucfirst($delivery->type) }}</td>
+                        <td>{{ $delivery->type == "egg" ? $delivery->egg->name : $delivery->chick->name }}</td>
+                        <td>{{ $delivery->type == "egg" ? $delivery->egg->slug : $delivery->chick->slug }}</td>
                         <td>{{ \Carbon\Carbon::parse($delivery->created_at)->diffForHumans() }}</td>
                         <td>{{ $delivery->created_at }}</td>
                     </tr>

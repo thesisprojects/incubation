@@ -59,8 +59,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Slug</th>
-                    <th>Expiration date</th>
-                    <th>Days till expiration</th>
                     <th>Transfer to hatchery</th>
                     <th></th>
                     <th></th>
@@ -71,8 +69,6 @@
                     <tr>
                         <td>{{ ucwords($egg->name) }}</td>
                         <td>{{ strtolower($egg->slug) }}</td>
-                        <td>{{ Carbon\Carbon::parse($egg->expire_at)->toDateString() }}</td>
-                        <td>{{ Carbon\Carbon::parse($egg->expire_at)->diffForHumans() }}</td>
                         <td>
                             {{ Form::open(['route'=>'postTransferEgg']) }}
                             {{ csrf_field() }}

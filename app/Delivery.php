@@ -18,4 +18,9 @@ class Delivery extends Model
         return $this->belongsTo("App\Egg");
     }
 
+    public function chick()
+    {
+        return $this->belongsTo("App\Chick");
+    }
+
 }

@@ -44,14 +44,6 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group">
-                                <label for="address-input">Expires at</label>
-                                <input type="date" class="form-control" id="expire_at-input" name="expire_at" value = "{{ Carbon\Carbon::parse(\Carbon\Carbon::now()->addDays(23))->toDateString() }}" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group">
                                 <button class="btn btn-success" type="submit">Create</button>
                                 <button class="btn btn-danger" type="reset">Cancel</button>
                             </div>

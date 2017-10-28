@@ -57,6 +57,10 @@ Route::group(['prefix' => '/'], function () {
             Route::name('postCreateEgg')->post('create', 'EggsController@postCreate')->middleware('permissions:create eggs');
         });
 
+        Route::group(['prefix' => 'chicks/'], function () {
+            Route::name('getChicks')->get('', 'ChicksController@getChicks')->middleware('permissions:view chicks');
+        });
+
         Route::group(['prefix' => 'incubators/'], function () {
             Route::name('getIncubators')->get('', 'IncubatorController@getIncubators')->middleware('permissions:view incubators');
             Route::name('getEditIncubator')->get('edit/{id}', 'IncubatorController@getEdit')->middleware('permissions:edit incubators');
@@ -88,7 +92,8 @@ Route::group(['prefix' => '/'], function () {
         });
 
         Route::group(['prefix' => 'delivery/'], function () {
-            Route::name('getDelivery')->get('', 'DeliveryController@index')->middleware('permissions:deliver');
+            Route::name('getDelivery')->get('eggs', 'DeliveryController@index')->middleware('permissions:deliver');
+            Route::name('getDeliveryChicks')->get('chicks', 'DeliveryController@getDeliveryChicks')->middleware('permissions:deliver');
             Route::name('postDeliver')->post('deliver', 'DeliveryController@deliver')->middleware('permissions:deliver');
             Route::name('getDeliveries')->get('deliveries', 'DeliveryController@getDeliveries')->middleware('permissions:deliver');
             Route::name('downloadDeliveryReport')->get('report/{from}/{to}', 'ReportsController@downloadDeilveryReports')->middleware('permissions:deliver');

@@ -42,7 +42,7 @@ class SetEggToExpired extends Command
     public function handle()
     {
         $this->info('Starting expiration process');
-        $eggs = Egg::where('is_expired', 0)->get();
+        $eggs = Egg::where('is_expired', 0)->whereNotNull('expire_at')->get();
         $numberOfEggsMarkedAsExpired = 0;
         foreach($eggs as $egg)
         {

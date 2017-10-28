@@ -30,7 +30,6 @@ class EggsController extends Controller
             $this->validate($request, [
                 'name' => 'required|min:2|max:45',
                 'slug' => 'required|min:2|max:45',
-                'expire_at' => 'required',
             ]);
             $data = $request->all();
             $egg = new Egg($data);
