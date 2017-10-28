@@ -14,6 +14,7 @@
                     <th>Slug</th>
                     <th>Delivered at</th>
                     <th>Delivery date</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -25,6 +26,9 @@
                         <td>{{ $delivery->type == "egg" ? $delivery->egg->slug : $delivery->chick->slug }}</td>
                         <td>{{ \Carbon\Carbon::parse($delivery->created_at)->diffForHumans() }}</td>
                         <td>{{ $delivery->created_at }}</td>
+                        <td>
+                            <a href = "{{ route('getDeliveryReceipt', ['id' => $delivery->id]) }}">Receipt</a>
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

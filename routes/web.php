@@ -89,10 +89,13 @@ Route::group(['prefix' => '/'], function () {
             Route::name('getHatcheryEggs')->get('{id}/eggs', 'HatcheryController@getHatcheryEggs')->middleware('permissions:view hatchery');
             Route::name('postCreateHatchery')->post('create', 'HatcheryController@postCreate')->middleware('permissions:create hatchery');
             Route::name('postEditHatchery')->post('update', 'HatcheryController@postUpdate')->middleware('permissions:edit hatchery');
+            Route::name('postHatchEgg')->post('hatch', 'HatcheryController@hatch')->middleware('permissions:edit hatchery');
         });
 
         Route::group(['prefix' => 'delivery/'], function () {
             Route::name('getDelivery')->get('eggs', 'DeliveryController@index')->middleware('permissions:deliver');
+            Route::name('getDeliveryReceipt')->get('{id}/receipt', 'DeliveryController@getReceipt')->middleware('permissions:deliver');
+            Route::name('getDeliveryYearChartData')->get('yeardata', 'DeliveryController@getMonthChartData');
             Route::name('getDeliveryChicks')->get('chicks', 'DeliveryController@getDeliveryChicks')->middleware('permissions:deliver');
             Route::name('postDeliver')->post('deliver', 'DeliveryController@deliver')->middleware('permissions:deliver');
             Route::name('getDeliveries')->get('deliveries', 'DeliveryController@getDeliveries')->middleware('permissions:deliver');

@@ -25,9 +25,13 @@
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->toDateString() }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->expire_at)->diffForHumans() }}</td>
                         <td>{{ Carbon\Carbon::parse($egg->hatchery_date)->toDateString() }}</td>
-                        <td><a href="{{ route('getHatcheryEggs', ['id' => $hatchery->id]) }}"
-                               class="btn btn-success text-white">Hatch
-                            </a></td>
+                        <td>
+                            {{ Form::open(['route' => 'postHatchEgg']) }}
+                            {{ csrf_field() }}
+                            <input type="hidden" name="egg_id" value="{{ $egg->id }}">
+                            <button type="submit" class="btn green white-text">Hatch</button>
+                            {{ Form::close() }}
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

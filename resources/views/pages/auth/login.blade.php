@@ -15,7 +15,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="card-body">
-                                        <h1 class="font-weight-normal">Sign in</h1>
+                                        <h1 class="font-weight-normal">Vianney Bacus Farm </h1>
                                         @include('snippets.validationerrors')
                                         @include('snippets.autherror')
                                         @include('snippets.exceptionerror')
